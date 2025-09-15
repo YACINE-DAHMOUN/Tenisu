@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Models;
-using System.io;
+using System.IO;
 using System.Linq;
 
 
@@ -20,7 +20,7 @@ public class PlayerService
         var playersContainer = JsonSerializer.Deserialize<PlayersContainer>(jsonString);
         return playersContainer?.Players.ToList() ?? new List<Player>();
     }
-    public Player GetPlayerById(int id)
+    public Player? GetPlayerById(int id)  // Ajout du ? pour indiquer que la méthode peut retourner null
     {
         var players = GetAllPlayers();
         return players.FirstOrDefault(p => p.Id == id);

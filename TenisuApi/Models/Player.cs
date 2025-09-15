@@ -5,8 +5,8 @@ using System.ComponentModel;
 namespace Models;
 
 
-    public class Player
-{
+    public class Player 
+{ 
     [JsonPropertyName("id")]
     public int Id { get; set; }
     [JsonPropertyName("firstname")]
@@ -22,6 +22,6 @@ namespace Models;
     [JsonPropertyName("picture")]
     public string Picture { get; set; }
     [JsonPropertyName("data")]
-    public int Data { get; set; }
+    public required PlayerData Data { get; set; }  // Ajout du modificateur required
 }
 

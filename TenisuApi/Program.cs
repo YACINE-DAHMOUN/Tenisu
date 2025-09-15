@@ -1,12 +1,12 @@
+using Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddEndpointsApiExplorer(); // Ajoutez cette ligne
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<PlayerService>();
-
 
 var app = builder.Build();
 
@@ -16,7 +16,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// Commentez temporairement la redirection HTTPS pour le développement
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
