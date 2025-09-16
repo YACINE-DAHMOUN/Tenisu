@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models;
 using Data;
-using HttpGet = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 
 namespace Controllers;
 
@@ -16,7 +15,7 @@ public class PlayersController : ControllerBase
         _playerService = playerService;
     }
 
-    [@HttpGet]  // ← ICI l'attribut
+    [HttpGet]  // ← ICI l'attribut
     public IActionResult Get()
     {
         // 1. Récupérer les joueurs
@@ -29,7 +28,52 @@ public class PlayersController : ControllerBase
         return Ok(sortedPlayers);
     }
 
-    [@HttpGet("{id}")]
+   
+    [HttpGet("stats")]
+    public IActionResult GetStatistics()
+    {
+        var players = _playerService.GetAllPlayers();
+
+        // 1. Calculer le meilleur pays (séparément)
+        var bestCountry = players
+            .GroupBy(p => p.Country.Code)
+            .Select(g => new {
+                Country = g.Key,
+                WinRatio = g.Average(p => p.Data.Last.Average())
+            })
+            .OrderByDescending(x => x.WinRatio)
+            .FirstOrDefault()?.Country ?? "N/A";
+
+        // 2. Calculer l'IMC moyen (séparément)
+        var averageIMC = players
+            .Select(p => (p.Data.Weight / 1000.0) / ((p.Data.Height / 100.0) * (p.Data.Height / 100.0)))
+            .Average();
+
+        // 3. Calculer la médiane des tailles (séparément)
+        var sortedHeights = players.Select(p => p.Data.Height).OrderBy(h => h).ToList();
+        int count = sortedHeights.Count;
+        double heightMedian;
+
+        if (count % 2 == 0)
+        {
+            heightMedian = (sortedHeights[count / 2 - 1] + sortedHeights[count / 2]) / 2.0;
+        }
+        else
+        {
+            heightMedian = sortedHeights[count / 2];
+        }
+
+        // 4. Créer l'objet de réponse
+        var statistics = new PlayerStatistics
+        {
+            BestCountry = bestCountry,
+            AverageIMC = averageIMC,
+            HeightMedian = heightMedian
+        };
+
+        return Ok(statistics);
+    }
+    [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
         var player = _playerService.GetPlayerById(id);
