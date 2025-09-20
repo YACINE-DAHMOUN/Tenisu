@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: tenisuapi
+    buildCommand: dotnet restore && dotnet build
+    startCommand: dotnet run --urls http://0.0.0.0:$PORT
+    healthCheckPath: /api/players
