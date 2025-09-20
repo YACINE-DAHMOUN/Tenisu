@@ -1,7 +1,7 @@
 services:
   - type: web
     name: tenisuapi
-    env: dotnet
-    buildCommand: dotnet restore && dotnet build
-    startCommand: dotnet run --urls http://0.0.0.0:$PORT
+    rootDir: TenisuApi
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /api/players
