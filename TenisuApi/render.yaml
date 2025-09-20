@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: tenisuapi
-    rootDir: TenisuApi
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    healthCheckPath: /api/players
