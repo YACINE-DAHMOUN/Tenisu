@@ -2,6 +2,8 @@ using System.Text.Json;
 using Models;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Net.Cache;
 
 
 
@@ -24,6 +26,29 @@ public class PlayerService
     {
         var players = GetAllPlayers();
         return players.FirstOrDefault(p => p.Id == id);
+    }
+
+    public Player AddPlayer(CreatePlayerRequest request)  
+    {
+        var players = GetAllPlayers();
+
+        var newId = players.Any() ? players.Max(p => p.Id) + 1 : 1 ;
+
+            var newPlayer = new Player
+        {
+            Id = newId,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            ShortName = request.ShortName,
+            Sex = request.Sex,
+            Country = request.Country,
+            Picture = request.Picture,
+            Data = request.Data
+                };
+
+        players.Add(newPlayer);
+        return newPlayer;
+
     }
 }
 

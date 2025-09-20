@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Data;
+using Microsoft.AspNetCore.Mvc;
 using Models;
-using Data;
+using System;
 
 namespace Controllers;
 
@@ -82,5 +83,36 @@ public class PlayersController : ControllerBase
             return NotFound();
         }
         return Ok(player);
+    }
+
+    [HttpPost]
+    public IActionResult CreatePlayer([FromBody] CreatePlayerRequest request)
+    {
+        // 1. Validation basique
+        if (request == null)
+        {
+            return BadRequest("Player data is required.");
+        }
+
+        // 2. Validation des champs obligatoires
+        if (string.IsNullOrEmpty(request.FirstName) ||
+            string.IsNullOrEmpty(request.LastName) ||
+            request.Data == null)
+        {
+            return BadRequest("FirstName, LastName and Data are required.");
+        }
+
+        try
+        {
+            // 3. Appeler le service pour créer le joueur
+            var newPlayer = _playerService.AddPlayer(request);
+
+            // 4. Retourner le joueur créé avec status 201 Created
+            return Created($"/api/players/{newPlayer.Id}", newPlayer);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error creating player: {ex.Message}");
+        }
     }
 }
