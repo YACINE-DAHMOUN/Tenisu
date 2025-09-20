@@ -4,8 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer(); // Ajoutez cette ligne
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<PlayerService>();
 
 var app = builder.Build();
@@ -13,10 +13,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-// Commentez temporairement la redirection HTTPS pour le développement
+// Commentez temporairement la redirection HTTPS pour le dï¿½veloppement
 // app.UseHttpsRedirection();
 
 app.UseAuthorization();
